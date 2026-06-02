@@ -556,7 +556,7 @@ body::after {
 
   <!-- Header -->
   <header id="header">
-    <div class="hdr-logo">⚡ SCALPER<span>AI v1.0</span></div>
+    <div class="hdr-logo">⚡ SCALPER<span>AI v2.0 LIVE</span></div>
     <div class="hdr-spacer"></div>
     <span id="clockEl">--:--:--</span>
     <button class="hdr-btn" id="themeBtn">☀</button>
@@ -565,8 +565,8 @@ body::after {
   <!-- Status bar -->
   <div id="statusBar">
     <div class="status-item"><div class="status-dot"></div> <span>LIVE</span></div>
-    <div class="status-item">MODE: <b id="statusMode">SIM</b></div>
-    <div class="status-item">AGENTS: <b>7</b></div>
+    <div class="status-item">MODE: <b id="statusMode">LIVE</b></div>
+    <div class="status-item">AGENTS: <b>7</b></div><div class="status-item">DATA: <b>BINANCE·YAHOO·ECB</b></div>
     <div class="status-item">PWA READY</div>
   </div>
 
@@ -734,33 +734,14 @@ body::after {
       <div class="set-inner">
 
         <div class="set-section">
-          <div class="set-sec-title">AI PROVIDER</div>
-          <div class="set-row">
-            <label class="set-label">PROVIDER</label>
-            <select class="set-select" id="providerSelect" name="provider">
-              <option value="simulation">⚡ Simulation (Free, No Key)</option>
-              <option value="openai">OpenAI (GPT)</option>
-              <option value="claude">Anthropic (Claude)</option>
-              <option value="gemini">Google (Gemini)</option>
-              <option value="deepseek">DeepSeek</option>
-              <option value="groq">Groq (Ultra-Fast)</option>
-              <option value="openrouter">OpenRouter</option>
-              <option value="mistral">Mistral AI</option>
-            </select>
+          <div class="set-sec-title">DATA SOURCES</div>
+          <div class="set-note">
+            ⚡ <b>Always Live — No API Key Needed</b><br><br>
+            🔷 <b>Crypto</b> (BTC, ETH, SOL, etc.) — Binance public API: real-time price, order book, trade tape, OHLCV candles<br>
+            🔶 <b>Forex</b> (EUR/USD, GBP/USD, etc.) — Frankfurter / ECB: live exchange rates + history<br>
+            🟡 <b>Equities &amp; Gold</b> (AAPL, TSLA, XAUUSD, etc.) — Yahoo Finance: intraday OHLCV<br>
+            🤖 <b>AI Analysis</b> — Claude (Anthropic): interprets real indicator data for each scan
           </div>
-          <div class="set-row" id="row-apiKey">
-            <label class="set-label">API KEY</label>
-            <input class="set-input" id="set-apiKey" type="password" placeholder="Paste API key here…" autocomplete="off"/>
-          </div>
-          <div class="set-row" id="row-model">
-            <label class="set-label">MODEL (optional)</label>
-            <input class="set-input" id="set-model" type="text" placeholder="Leave blank for default"/>
-          </div>
-          <div class="set-row" id="row-baseUrl">
-            <label class="set-label">CUSTOM BASE URL (optional)</label>
-            <input class="set-input" id="set-baseUrl" type="text" placeholder="https://…"/>
-          </div>
-          <div class="set-note">🔒 API keys are stored only in your browser's local storage and never sent anywhere except your chosen AI provider.</div>
         </div>
 
         <div class="set-section">
@@ -788,7 +769,7 @@ body::after {
         </div>
 
         <div class="disclaimer mt16">
-          ⚠ DISCLAIMER: Scalper AI is a simulation for educational purposes only. All signals are AI-generated and do not constitute financial advice. Scalp trading involves substantial risk of loss. Always use proper risk management. DYOR. Trade responsibly.
+          ⚠ DISCLAIMER: Scalper AI v2.0 uses real live market data (Binance, Yahoo Finance, ECB) and Claude AI analysis. Signals reflect actual market conditions but do NOT constitute financial advice. Scalp trading involves substantial risk of loss. Always use stop losses and proper risk management. DYOR. Trade responsibly.
         </div>
 
       </div>
