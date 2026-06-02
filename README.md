@@ -1,294 +1,113 @@
-# 🍠 Kamote Trading AI — User Guide
+# ⚡ Scalper AI — User Guide
 
-> **Multi-Agent Intelligence for Financial Markets**
-> A step-by-step tutorial for getting started and making the most of the app.
-
----
-
-## Table of Contents
-
-1. [What is Kamote Trading AI?](#1-what-is-kamote-trading-ai)
-2. [Getting Started — Installation](#2-getting-started--installation)
-3. [Setting Up Your AI Provider](#3-setting-up-your-ai-provider)
-4. [Running Your First Analysis](#4-running-your-first-analysis)
-5. [Understanding the Results](#5-understanding-the-results)
-6. [Using the Watchlist](#6-using-the-watchlist)
-7. [Viewing History](#7-viewing-history)
-8. [Exporting Reports](#8-exporting-reports)
-9. [Tips & Tricks](#9-tips--tricks)
-10. [Disclaimer](#10-disclaimer)
+> **Multi-Agent Scalping Intelligence — Sub-Minute Trade Signals**
+> A fast, mobile-first PWA that runs 7 AI agents in sequence to generate short-timeframe scalp signals.
 
 ---
 
-## 1. What is Kamote Trading AI?
+## What is Scalper AI?
 
-Kamote Trading AI is a **mobile-first progressive web app (PWA)** that simulates a team of AI financial analysts working together to evaluate any asset — stocks, crypto, forex, or commodities.
+Scalper AI is the scalping-focused evolution of Kamote Trading AI. Instead of macro fundamentals and long-term sentiment, it focuses entirely on **sub-minute to 15-minute timeframe analysis** using agents that mirror how professional scalpers think.
 
-Instead of one AI opinion, you get a **multi-agent pipeline** with five phases:
+### The 7-Agent Pipeline
 
-| Phase | Agent | What It Does |
-|-------|-------|-------------|
-| Phase 1 | Fundamentals Analyst | Evaluates financial health, metrics, and valuation |
-| Phase 1 | Sentiment Analyst | Reads crowd psychology, fear & greed, social volume |
-| Phase 1 | Technical Analyst | Reads charts, trends, RSI, MACD, support/resistance |
-| Phase 1 | News Analyst | Scans recent headlines and assesses news impact |
-| Phase 2 | Bull & Bear Research | Debate: argues both sides of the trade |
-| Phase 3 | Trader Agent | Makes a BUY / SELL / HOLD call with entry & targets |
-| Phase 4 | Risk Manager | Reviews the trade, approves or rejects it |
-| Phase 5 | Portfolio Manager | Delivers the final verdict and allocation |
-
----
-
-## 2. Getting Started — Installation
-
-### Option A — Use directly in your browser
-
-1. Download all four files and place them in the **same folder**:
-   - `index.html`
-   - `works.js`
-   - `manifest.json`
-   - `sw.js`
-
-2. Open `index.html` in any modern browser (Chrome, Safari, Edge, Firefox).
-
-> ⚠️ **Important:** Open the file through a local server or directly — do not rename or move individual files. They must stay together in the same folder.
-
-### Option B — Install as a PWA (Add to Home Screen)
-
-On **Android (Chrome)**:
-1. Open the app in Chrome.
-2. Tap the **three-dot menu** (⋮) in the top right.
-3. Tap **"Add to Home screen"**.
-4. Name it **Kamote Trading AI** and tap **Add**.
-
-On **iPhone/iPad (Safari)**:
-1. Open the app in Safari.
-2. Tap the **Share** button (the box with an arrow pointing up).
-3. Scroll down and tap **"Add to Home Screen"**.
-4. Tap **Add**.
-
-The app will now appear on your home screen like a native app — with the 🍠 icon — and works **offline** after the first load.
+| Phase | Agent | What It Analyzes |
+|-------|-------|-----------------|
+| 1 | Price Action | Candlestick structure, bar bias, ATR, volume profile |
+| 2 | Order Flow | Bid/ask delta, imbalance %, book depth, big trades |
+| 3 | Momentum | RSI (1m/5m/15m), MACD, Stochastic, EMA stack |
+| 4 | Microstructure | Intraday S/R, VWAP position, liquidity pockets, session |
+| 5 | Entry Signal | Votes across agents → LONG / SHORT / NO TRADE |
+| 6 | Risk Gate | R:R check, position sizing, approval/block |
+| 7 | Execution | Order type, urgency level, execution brief |
 
 ---
 
-## 3. Setting Up Your AI Provider
+## Files
 
-By default, Kamote Trading AI runs in **Simulation Mode** — no API key needed. It generates realistic, randomized market analysis instantly.
+Place all 4 files in the **same folder**:
+- `index.html` — UI
+- `engine.js` — All logic, simulation, AI calls
+- `manifest.json` — PWA manifest
+- `sw.js` — Service worker (offline support)
 
-To connect a **real AI** for live responses:
-
-**Step 1** — Tap the ⚙ Settings tab at the bottom of the screen (or tap ⚙ in the top-right header).
-
-**Step 2** — Under **AI Provider**, choose your provider:
-
-| Provider | Best For |
-|----------|----------|
-| Simulation | Free, instant, no setup |
-| OpenAI (GPT) | General purpose, reliable |
-| Anthropic (Claude) | Nuanced analysis, strong reasoning |
-| Google (Gemini) | Fast, multimodal |
-| DeepSeek | Cost-efficient |
-| Groq | Ultra-fast inference |
-| Mistral AI | Lightweight, open-source |
-| OpenRouter | Access multiple models with one key |
-
-**Step 3** — Paste your **API Key** in the field provided.
-
-**Step 4** — Optionally, enter a **Model Name** (leave blank for the provider's default).
-
-**Step 5** — Tap **Save Settings**.
-
-> 🔒 Your API key is stored only in your browser's local storage. It is never sent to any server other than your chosen AI provider.
+Open `index.html` in Chrome, Safari, Edge, or Firefox.
 
 ---
 
-## 4. Running Your First Analysis
+## AI Provider Setup
 
-**Step 1** — Make sure you are on the **Analyze** tab (📊 bottom nav).
+Default is **Simulation Mode** — free, instant, no API key needed.
 
-**Step 2** — Tap the input field at the top and type an asset symbol. Examples:
+To use a real AI:
+1. Go to ⚙ **Settings** tab
+2. Choose your provider (OpenAI, Claude, Gemini, Groq, etc.)
+3. Paste your API key
+4. Tap **SAVE**
 
-| Asset Type | Example Symbols |
-|------------|----------------|
-| Stocks | `AAPL`, `TSLA`, `NVDA`, `MSFT` |
-| Crypto | `BTCUSD`, `ETHUSD`, `SOLUSDT` |
-| Forex | `EURUSD`, `GBPUSD`, `USDJPY` |
-| Commodities | `XAUUSD` (Gold), `XAGUSD` (Silver) |
-
-**Step 3** — Or tap one of the **quick-pick chips** (AAPL, TSLA, NVDA, BTCUSD…) to instantly load a popular symbol.
-
-**Step 4** — Tap **▶ Analyze**.
-
-**Step 5** — Watch the loading screen as each agent runs in sequence. The progress bar shows which phase is active.
-
-**Step 6** — When complete, all results appear below the input. Scroll down to read every phase.
-
-> ⏱ A full analysis typically takes **5–15 seconds** depending on your connection and provider.
+Groq is recommended for scalping — it's the fastest inference available.
 
 ---
 
-## 5. Understanding the Results
+## Supported Symbols
 
-### Phase 1 — Analyst Cards
-
-Each of the four analyst cards shows:
-
-**Fundamentals Analyst**
-- Bull Score vs Bear Score (0–100)
-- Key financial metrics (P/E ratio, revenue growth, margins, etc.)
-- A written summary of the fundamental picture
-
-**Sentiment Analyst**
-- Positive % vs Negative % sentiment split
-- Fear & Greed Index (0 = Extreme Fear, 100 = Extreme Greed)
-- Social media volume level
-- Written sentiment summary
-
-**Technical Analyst**
-- Trend direction and Bias (Bullish / Neutral / Bearish)
-- Trend Strength %
-- RSI, MACD, MA50, support & resistance levels
-- Chart pattern notes
-
-**News Analyst**
-- Impact score (0–100) and label (Low / Moderate / High Impact)
-- Risk Level (Low → Critical)
-- Top recent headlines
-- News summary
+| Asset Class | Examples |
+|-------------|---------|
+| Crypto | BTCUSD, ETHUSD, SOLUSDT |
+| Forex | EURUSD, GBPUSD, USDJPY |
+| Gold/Commodities | XAUUSD, XAGUSD |
+| Equities | AAPL, TSLA, NVDA, MSFT |
 
 ---
 
-### Phase 2 — Research Debate
+## Timeframes
 
-Two panels present opposing cases:
-
-**📈 Bullish Case** — reasons to buy, potential upside %, confidence %
-
-**📉 Bearish Case** — reasons to be cautious, potential downside %, confidence %
-
-Read both to understand the full risk picture before making any decision.
-
----
-
-### Phase 3 — Trader Agent
-
-The trader synthesizes all analyst reports and produces:
-
-| Field | Meaning |
-|-------|---------|
-| **BUY / SELL / HOLD** | The trade signal |
-| **Entry** | Suggested entry price |
-| **Target** | Price target if the trade goes right |
-| **Stop Loss** | Price level to exit if the trade goes wrong |
-| **Confidence** | How certain the trader is (shown as a meter bar) |
-| **Timeframe** | Intraday / Swing / Short-term / Medium-term |
+| TF | Use For |
+|----|---------|
+| 1m | Ultra-fast scalps (seconds to 2 min holds) |
+| 3m | Standard scalp (2–5 min holds) |
+| 5m | Comfortable scalp (5–10 min holds) |
+| 15m | Momentum scalp (10–30 min holds) |
 
 ---
 
-### Phase 4 — Risk Manager
+## Understanding the Signal
 
-The risk manager reviews the trader's call:
+### Exec Banner
+- **LONG** (green) / **SHORT** (red) / **NO TRADE** (grey)
+- **URGENCY**: IMMEDIATE → act now | READY → set order | STANDBY → wait
 
-| Status | Meaning |
-|--------|---------|
-| ✓ **APPROVED** | Trade parameters are acceptable |
-| ⚠ **REVIEW NEEDED** | Marginal — reduce position size |
-| ✕ **REJECTED** | Risk/reward is unfavorable — do not trade |
+### Entry Levels
+- **Entry** — suggested fill price
+- **T1** — first target (partial exit, 1:1.5R minimum)
+- **T2** — extended target (trail stop from T1)
+- **Stop Loss** — hard exit level
 
-Key metrics shown: Risk/Reward Ratio, Position Size, Max Drawdown, Exposure Level.
+### Risk Gate Status
+- ✓ **APPROVED** — full size, proceed
+- ⚠ **REDUCE** — half size, lower confidence
+- ✕ **BLOCKED** — do not trade (bad R:R or no signal)
 
----
-
-### Phase 5 — Portfolio Manager (Final Verdict)
-
-The portfolio manager gives the **final decision** — taking the trader signal and risk approval together:
-
-- 🚀 **BUY** — confident long entry
-- 🔻 **SELL** — short or exit positions
-- ⏸ **HOLD** — wait for better confirmation
-
-Shows overall confidence % and recommended portfolio allocation %.
+### Signal Confidence
+- Driven by vote alignment across all 4 analysis agents
+- Below 60% → Risk Gate reduces size
+- Above 80% → Immediate execution recommended
 
 ---
 
-## 6. Using the Watchlist
+## Install as PWA (Add to Home Screen)
 
-The app automatically saves any symbol you analyze to your **Watchlist**.
+**Android (Chrome):** Menu → Add to Home Screen  
+**iPhone (Safari):** Share → Add to Home Screen
 
-**To view your watchlist:** Tap the ⭐ **Watchlist** tab in the bottom nav.
-
-**To re-analyze a symbol:** Tap the symbol name — it will run a fresh analysis instantly and switch you back to the Analyze tab.
-
-**To remove a symbol:** Tap the **✕** button next to it.
+Works offline after first load.
 
 ---
 
-## 7. Viewing History
+## Disclaimer
 
-Every completed analysis is saved to your history.
-
-**To view history:** Tap the 🕐 **History** tab in the bottom nav.
-
-Each entry shows:
-- The **symbol** analyzed
-- The **final decision** (BUY / SELL / HOLD) color-coded
-- The **date** of the analysis
-
-**To re-run an analysis:** Tap any history entry.
-
-**To clear all history:** Tap the **🗑 Clear History** button at the bottom of the History page.
-
-> History is stored locally in your browser. Clearing your browser data will also clear the history.
+> ⚠ Scalper AI is for educational and simulation purposes only. All signals are AI-generated and do not constitute financial advice. Scalp trading carries substantial risk of loss. Always use stop losses and proper risk management. DYOR. Trade responsibly.
 
 ---
 
-## 8. Exporting Reports
-
-After running an analysis, you can export the results.
-
-**Go to Settings** (⚙ tab) and scroll to the bottom.
-
-**⬇ Export JSON** — Downloads a raw JSON file with all data from every phase of the analysis. Useful for developers or building your own tools.
-
-**📄 Export Report** — Downloads an HTML file formatted as a clean report. Open it in any browser and use **Print → Save as PDF** to get a PDF.
-
-> Both export options are only available after at least one analysis has been completed.
-
----
-
-## 9. Tips & Tricks
-
-**Toggle Light/Dark Mode**
-Tap the ☀ button in the top-right header, or go to Settings and toggle **Light Mode**.
-
-**Keyboard Shortcuts (desktop/laptop)**
-
-| Shortcut | Action |
-|----------|--------|
-| `Enter` | Run analysis (when symbol field is focused) |
-| `Ctrl + Enter` | Run analysis (anywhere) |
-| `Ctrl + ,` | Open settings |
-| `Escape` | Close modals |
-
-**Best symbols to try first**
-If you're new, start with `AAPL`, `BTCUSD`, or `EURUSD` — these give rich, realistic simulated data across all analyst types.
-
-**What does Simulation Mode actually do?**
-In Simulation Mode, the app generates statistically realistic market analysis using randomized but internally consistent data — the analyst scores, metrics, and trader signals all relate to each other. It's great for understanding how the platform works before connecting a real AI provider.
-
-**Offline support**
-Once the app has loaded once, it works offline thanks to the built-in service worker. Your settings, watchlist, and history are all stored locally and persist across sessions.
-
----
-
-## 10. Disclaimer
-
-> ⚠️ **Kamote Trading AI is a simulation for educational and demonstration purposes only.**
->
-> All analysis, signals, and recommendations are AI-generated and do **not** constitute financial advice. This tool should not be used as the sole basis for any investment decision. Past performance is not indicative of future results.
->
-> Always do your own research (DYOR) and consult a licensed financial advisor before making any investment decisions. Trade responsibly.
-
----
-
-*Made with 🍠 by Kamote Trading AI — v1.0.0*
+*⚡ Scalper AI v1.0 — rebuilt from Kamote Trading AI*
