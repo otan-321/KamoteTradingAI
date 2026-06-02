@@ -20,12 +20,9 @@ const TF_MAP = { '1m': { binance: '1m', min: 1 }, '3m': { binance: '3m', min: 3 
 
 const Settings = {
   defaults: {
-    provider: 'claude_builtin',
+    provider: 'none',
     apiKey: '',
-    model: '',
-    baseUrl: '',
     riskPct: 1,
-    maxSpread: 0.05,
     tfDefault: '5m',
   },
 
@@ -766,12 +763,11 @@ const Analysis = {
   },
 };
 
-// ─── AI Commentary via Claude ─────────────────────────────────────────────────
+// ─── AI Commentary — multi-provider ──────────────────────────────────────────
 
 const AI = {
-  async getScalpCommentary(sym, tf, type, paData, ofData, moData, msData, entryData, price) {
-    try {
-      const prompt = `You are an expert scalp trader analyzing REAL live market data. Provide a concise, professional scalp trading assessment.
+  buildPrompt(sym, tf, type, paData, ofData, moData, msData, entryData, price) {
+    return `You are an expert scalp trader analyzing REAL live market data. Provide a concise, professional scalp trading assessment.
 
 SYMBOL: ${sym} | TYPE: ${type} | TIMEFRAME: ${tf} | LIVE PRICE: ${price}
 
@@ -782,33 +778,71 @@ MOMENTUM: ${moData.summary}
 MICROSTRUCTURE: ${msData.summary}
 ENTRY SIGNAL: ${entryData.summary}
 
-Respond with ONLY a JSON object (no markdown):
-{
-  "commentary": "2-3 sentences: what the real data tells you right now, actionable insight",
-  "keyRisk": "1 sentence: the main risk to this trade",
-  "watchFor": "1 thing to watch that could invalidate or confirm the setup"
-}`;
+Respond with ONLY a JSON object (no markdown, no backticks):
+{"commentary":"2-3 sentences on what the real data says right now","keyRisk":"1 sentence on main risk","watchFor":"1 thing to watch"}`;
+  },
 
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 400,
-          messages: [{ role: 'user', content: prompt }],
-        }),
-      });
+  fallback(entryData, msData) {
+    return {
+      commentary: entryData.signal === 'NO TRADE'
+        ? 'Insufficient confluence — market structure is indecisive. Wait for clearer alignment before entering.'
+        : `${entryData.signal} setup detected with ${entryData.confidence}% confidence based on live indicator confluence across price action, order flow, and momentum.`,
+      keyRisk: entryData.signal === 'LONG' ? 'Reversal risk if price closes below stop loss level.'
+             : entryData.signal === 'SHORT' ? 'Short squeeze risk if price reclaims entry level.'
+             : 'No active trade — capital preserved.',
+      watchFor: entryData.signal === 'LONG'  ? `R1 resistance at ${msData.r1?.toFixed(4)} — partial exit zone.`
+              : entryData.signal === 'SHORT' ? `S1 support at ${msData.s1?.toFixed(4)} — partial exit zone.`
+              : 'Next candle close for directional bias.',
+    };
+  },
 
-      if (!response.ok) throw new Error('AI call failed');
-      const data = await response.json();
-      const text = data.content[0].text.replace(/```json?|```/g, '').trim();
+  async getScalpCommentary(sym, tf, type, paData, ofData, moData, msData, entryData, price) {
+    const settings = Settings.get();
+    const { provider, apiKey } = settings;
+
+    if (!apiKey || provider === 'none') return this.fallback(entryData, msData);
+
+    const prompt = this.buildPrompt(sym, tf, type, paData, ofData, moData, msData, entryData, price);
+
+    const configs = {
+      anthropic: {
+        url: 'https://api.anthropic.com/v1/messages',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({ model: 'claude-haiku-4-5', max_tokens: 400, messages: [{ role: 'user', content: prompt }] }),
+        parse: d => d.content[0].text,
+      },
+      groq: {
+        url: 'https://api.groq.com/openai/v1/chat/completions',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+        body: JSON.stringify({ model: 'llama-3.1-8b-instant', max_tokens: 400, messages: [{ role: 'user', content: prompt }] }),
+        parse: d => d.choices[0].message.content,
+      },
+      openai: {
+        url: 'https://api.openai.com/v1/chat/completions',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+        body: JSON.stringify({ model: 'gpt-4o-mini', max_tokens: 400, messages: [{ role: 'user', content: prompt }] }),
+        parse: d => d.choices[0].message.content,
+      },
+      openrouter: {
+        url: 'https://openrouter.ai/api/v1/chat/completions',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+        body: JSON.stringify({ model: 'openai/gpt-4o-mini', max_tokens: 400, messages: [{ role: 'user', content: prompt }] }),
+        parse: d => d.choices[0].message.content,
+      },
+    };
+
+    const cfg = configs[provider];
+    if (!cfg) return this.fallback(entryData, msData);
+
+    try {
+      const res = await fetch(cfg.url, { method: 'POST', headers: cfg.headers, body: cfg.body });
+      if (!res.ok) throw new Error(`${provider} API ${res.status}`);
+      const data = await res.json();
+      const text = cfg.parse(data).replace(/```json?|```/g, '').trim();
       return JSON.parse(text);
-    } catch {
-      return {
-        commentary: `Real data analysis: ${entryData.signal === 'NO TRADE' ? 'Insufficient confluence detected. Market structure is indecisive — wait for clearer alignment before entering.' : `${entryData.signal} setup detected with ${entryData.confidence}% confidence based on live indicator confluence.`}`,
-        keyRisk: entryData.signal !== 'NO TRADE' ? `Key risk: ${entryData.signal === 'LONG' ? 'Reversal if price breaks below stop loss' : 'Short squeeze if price reclaims entry level'}` : 'No active trade risk.',
-        watchFor: `Watch ${entryData.signal === 'LONG' ? msData.r1?.toFixed(4) + ' (R1 resistance)' : entryData.signal === 'SHORT' ? msData.s1?.toFixed(4) + ' (S1 support)' : 'next candle close for direction'}`
-      };
+    } catch (e) {
+      console.warn('AI commentary failed:', e.message);
+      return this.fallback(entryData, msData);
     }
   }
 };
@@ -1048,22 +1082,36 @@ const App = {
     document.getElementById('saveSettingsBtn').addEventListener('click', () => this.saveSettings());
     document.getElementById('clearHistoryBtn').addEventListener('click', () => { History.clear(); this.renderHistory(); this.toast('History cleared', 'ok'); });
     document.getElementById('themeBtn').addEventListener('click', () => this.toggleTheme());
+    const ps = document.getElementById('providerSelect');
+    if (ps) ps.addEventListener('change', () => this.onProviderChange());
+  },
+
+  onProviderChange() {
+    const p = document.getElementById('providerSelect')?.value;
+    const row = document.getElementById('row-apiKey');
+    if (row) row.style.display = (p && p !== 'none') ? '' : 'none';
   },
 
   loadSettingsToForm() {
     const s = Settings.get();
-    ['riskPct'].forEach(k => {
-      const el = document.getElementById('set-' + k);
-      if (el) el.value = s[k] || '';
-    });
+    const ps = document.getElementById('providerSelect');
+    if (ps) { ps.value = s.provider || 'none'; this.onProviderChange(); }
+    const ak = document.getElementById('set-apiKey');
+    if (ak) ak.value = s.apiKey || '';
+    const rp = document.getElementById('set-riskPct');
+    if (rp) rp.value = s.riskPct || 1;
   },
 
   saveSettings() {
     const s = Settings.get();
-    const riskEl = document.getElementById('set-riskPct');
-    if (riskEl) s.riskPct = riskEl.value;
+    const ps = document.getElementById('providerSelect');
+    const ak = document.getElementById('set-apiKey');
+    const rp = document.getElementById('set-riskPct');
+    if (ps) s.provider = ps.value;
+    if (ak) s.apiKey   = ak.value;
+    if (rp) s.riskPct  = rp.value;
     Settings.save(s);
-    this.toast('Settings saved', 'ok');
+    this.toast('Settings saved ✓', 'ok');
   },
 
   bindExport() {

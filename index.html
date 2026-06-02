@@ -734,13 +734,37 @@ body::after {
       <div class="set-inner">
 
         <div class="set-section">
+          <div class="set-sec-title">AI PROVIDER</div>
+          <div class="set-row">
+            <label class="set-label">PROVIDER</label>
+            <select class="set-select" id="providerSelect">
+              <option value="anthropic">Anthropic (Claude) — Recommended</option>
+              <option value="groq">Groq (Free &amp; Ultra-Fast)</option>
+              <option value="openai">OpenAI (GPT-4o-mini)</option>
+              <option value="openrouter">OpenRouter</option>
+              <option value="none">No AI (rule-based only)</option>
+            </select>
+          </div>
+          <div class="set-row" id="row-apiKey">
+            <label class="set-label">API KEY</label>
+            <input class="set-input" id="set-apiKey" type="password" placeholder="Paste your API key here…" autocomplete="off"/>
+          </div>
+          <div class="set-note">
+            🔒 Key stored only in your browser — never sent anywhere except your chosen AI provider.<br><br>
+            • <b>Anthropic:</b> console.anthropic.com → API Keys<br>
+            • <b>Groq:</b> console.groq.com → Free tier available<br>
+            • <b>OpenAI:</b> platform.openai.com → API Keys<br>
+            • <b>No AI:</b> Market data + indicators still fully real
+          </div>
+        </div>
+
+        <div class="set-section">
           <div class="set-sec-title">DATA SOURCES</div>
           <div class="set-note">
-            ⚡ <b>Always Live — No API Key Needed</b><br><br>
-            🔷 <b>Crypto</b> (BTC, ETH, SOL, etc.) — Binance public API: real-time price, order book, trade tape, OHLCV candles<br>
-            🔶 <b>Forex</b> (EUR/USD, GBP/USD, etc.) — Frankfurter / ECB: live exchange rates + history<br>
-            🟡 <b>Equities &amp; Gold</b> (AAPL, TSLA, XAUUSD, etc.) — Yahoo Finance: intraday OHLCV<br>
-            🤖 <b>AI Analysis</b> — Claude (Anthropic): interprets real indicator data for each scan
+            🔷 <b>Crypto</b> — Binance: real-time price, order book, trade tape, OHLCV<br>
+            🔶 <b>Forex</b> — Frankfurter / ECB: live exchange rates<br>
+            🟡 <b>Stocks &amp; Gold</b> — Yahoo Finance: intraday OHLCV<br>
+            All market data is free — no key required.
           </div>
         </div>
 
