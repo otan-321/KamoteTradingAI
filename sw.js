@@ -1,5 +1,5 @@
 // Scalper AI - Service Worker v1.0
-const CACHE_NAME = 'scalper-ai-v1.0.0';
+const CACHE_NAME = 'scalper-ai-v1.0.1';
 const ASSETS = ['./', './index.html', './engine.js', './manifest.json'];
 
 self.addEventListener('install', e => {
